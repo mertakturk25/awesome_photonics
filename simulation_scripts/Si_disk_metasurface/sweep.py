@@ -38,14 +38,17 @@ WL_STEP = float(sys.argv[2]) if len(sys.argv) > 2 else 2.0
 ANGLE_STEP = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
 DISC = (256, 256)
 
-WL_MIN, WL_MAX = 500.0, 800.0
+# Wavelength range and output-folder name are env-overridable so offset studies
+# (e.g. +10 nm geometry, 400-750 nm) reuse this script; defaults = baseline run.
+WL_MIN = float(os.environ.get("SIDISK_WLMIN", 500.0))
+WL_MAX = float(os.environ.get("SIDISK_WLMAX", 800.0))
+OUTNAME = os.environ.get("SIDISK_OUTNAME", "Si_disk_20260708_bare-reflectance")
 ANG_MIN, ANG_MAX = -40.0, 40.0
 WLS = np.arange(WL_MIN, WL_MAX + 1e-6, WL_STEP)
 ANGLES = np.arange(ANG_MIN, ANG_MAX + 1e-6, ANGLE_STEP)
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-OUTBASE = os.path.join(REPO, "awesome_photonics_sim_output",
-                       "Si_disk_20260708_bare-reflectance")
+OUTBASE = os.path.join(REPO, "awesome_photonics_sim_output", OUTNAME)
 
 # (phi, psi) for the two distinct computed maps (both y-polarized)
 COMPUTED = {

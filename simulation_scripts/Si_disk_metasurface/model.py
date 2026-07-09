@@ -39,9 +39,12 @@ import nannos as nn
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from materials import asi_n, sio2_n
 
-P = 320.0
-R = 80.0
-H = 88.0
+# Geometry (nm). Overridable via env vars so offset studies reuse this model
+# unchanged; defaults reproduce the baseline P=320/R=80/H=88 run. Env vars are
+# inherited by spawned worker processes, so the override is consistent.
+P = float(os.environ.get("SIDISK_P", 320.0))
+R = float(os.environ.get("SIDISK_R", 80.0))
+H = float(os.environ.get("SIDISK_H", 88.0))
 CENTER = (P / 2, P / 2)
 
 # (phi, psi) for each requested (polarization, sweep) combination

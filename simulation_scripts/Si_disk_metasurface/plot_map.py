@@ -61,6 +61,16 @@ def plot_single(outbase, label):
     print("wrote", out)
 
 
+def _geom_label(outbase):
+    for label in ORDER:
+        f = os.path.join(outbase, label, f"map_{label}.npz")
+        if os.path.exists(f):
+            d = np.load(f, allow_pickle=True)
+            if "period_nm" in d:
+                return f"P={float(d['period_nm']):.0f}, R={float(d['radius_nm']):.0f}, H={float(d['height_nm']):.0f} nm"
+    return ""
+
+
 def plot_overview(outbase):
     fig, axes = plt.subplots(2, 2, figsize=(11, 9))
     for ax, label in zip(axes.ravel(), ORDER):
@@ -74,7 +84,7 @@ def plot_overview(outbase):
         ax.set_xlabel("Angle (deg)")
         ax.set_ylabel("Wavelength (nm)")
         fig.colorbar(im, ax=ax, label="R")
-    fig.suptitle(f"Bare a-Si disk BIC metasurface (P=320, R=80, H=88 nm) "
+    fig.suptitle(f"Bare a-Si disk BIC metasurface ({_geom_label(outbase)}) "
                  f"- total reflectance, enhanced (vmax={BIC_VMAX})", fontsize=11)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     out = os.path.join(outbase, "overview_4maps_enhanced.png")
